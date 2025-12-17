@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white font-mono p-10">
+    <div class="max-w-3xl mx-auto border-2 border-black p-16">
+        <h1 class="text-6xl font-bold uppercase tracking-tight mb-16">URL<br>Shortener</h1>
+        
+        <form hx-post="/shorten" hx-target="#result" hx-swap="innerHTML" class="space-y-5 mb-10">
+            <input type="url" name="url" placeholder="ENTER URL" required 
+                   class="w-full px-4 py-4 border-2 border-black text-base font-mono focus:outline-none focus:bg-gray-100">
+            <button type="submit" 
+                    class="w-full px-4 py-4 border-2 border-black bg-black text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors">
+                SHORTEN
+            </button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="mt-16 pt-5 border-t-2 border-black">
+            <a href="/stats" class="underline hover:bg-black hover:text-white">VIEW STATISTICS →</a>
+        </div>
+    </div>
+</body>
+</html>
