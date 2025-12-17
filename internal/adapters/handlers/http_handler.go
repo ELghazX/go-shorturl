@@ -53,13 +53,9 @@ func (h *HTTPHandler) HandleShorten(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, `
-		<div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-		<p class="text-lg mb-4">Short URL: <a href="%s" target="_blank" class="text-blue-500 hover:text-blue-700 font-mono">%s</a></p>
-		<button onclick="navigator.clipboard.writeText('%s')" 
-		        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
-		    Copy URL
-		</button>
-	</div>`, shortURL, shortURL, shortURL)
+		<div class="short-url">%s</div>
+		<button onclick="navigator.clipboard.writeText('%s')" style="width:100%%">COPY URL</button>
+	`, shortURL, shortURL)
 }
 
 func (h *HTTPHandler) HandleRedirect(w http.ResponseWriter, r *http.Request) {
@@ -85,6 +81,28 @@ func (h *HTTPHandler) HandleStats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.tmpl.ExecuteTemplate(w, "stats.html", urls)
+}
+
+func (h *HTTPHandler) HandleAPIStats(w http.ResponseWriter, r *http.Request) {
+	urls, err := h.urlService.GetStats(r.Context())
+	if err != nil {
+		http.Error(w, "Failed to get stats", http.StatusInternalServerError)
+		return
+	}
+
+	if len(urls) == 0 {
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, `<div class="empty">No Data</div>`)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, `<table><thead><tr><th>Code</th><th>URL</th><th>Clicks</th><th>Created</th></tr></thead><tbody>`)
+	for _, url := range urls {
+		fmt.Fprintf(w, `<tr><td class="code"><a href="/%s" target="_blank">%s</a></td><td class="url">%s</td><td class="clicks">%d</td><td>%s</td></tr>`,
+			url.ShortCode, url.ShortCode, url.LongURL, url.Clicks, url.CreatedAt.Format("2006-01-02 15:04"))
+	}
+	fmt.Fprint(w, `</tbody></table>`)
 }
 
 func getBaseURL(r *http.Request) string {
