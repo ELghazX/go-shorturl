@@ -1,4 +1,4 @@
-name: Deploy to Proxmox
+name: CI - Build and Push
 
 on:
   push:
@@ -49,54 +49,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Tailscale
-        uses: tailscale/github-action@v1
-        with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-
-      - name: Deploy to Proxmox
-        env:
-          PROXMOX_HOST: ${{ secrets.PROXMOX_HOST }}
-          PROXMOX_USER: ${{ secrets.PROXMOX_USER }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          BASE_URL: ${{ secrets.BASE_URL }}
+      - name: Build Status
         run: |
-          # Setup SSH
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $PROXMOX_HOST >> ~/.ssh/known_hosts
-
-          # Create .env file
-          cat > .env.prod << EOF
-          DB_USER=$DB_USER
-          DB_PASSWORD=$DB_PASSWORD
-          DB_NAME=$DB_NAME
-          BASE_URL=$BASE_URL
-          EOF
-
-          # Copy files to server
-          scp .env.prod $PROXMOX_USER@$PROXMOX_HOST:~/go-shorturl/.env
-          scp docker-compose.prod.yml $PROXMOX_USER@$PROXMOX_HOST:~/go-shorturl/docker-compose.yml
-
-          # Deploy on server
-          ssh $PROXMOX_USER@$PROXMOX_HOST << 'ENDSSH'
-            cd ~/go-shorturl
-            docker compose pull
-            docker compose up -d
-            docker image prune -f
-          ENDSSH
-
-      - name: Deployment Status
-        run: echo "Deployment completed successfully!"
+          echo "Docker image built and pushed successfully!"
+          echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
