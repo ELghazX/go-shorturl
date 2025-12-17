@@ -19,23 +19,23 @@
         }
     </script>
 </head>
-<body class="bg-white font-mono p-10">
-    <div class="max-w-3xl mx-auto border-2 border-black p-16">
-        <h1 class="text-6xl font-bold uppercase tracking-tight mb-16">URL<br>Shortener</h1>
+<body class="bg-white font-mono p-4 sm:p-6 md:p-10">
+    <div class="max-w-3xl mx-auto border-2 border-black p-6 sm:p-10 md:p-16">
+        <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tight mb-8 sm:mb-12 md:mb-16">URL<br>Shortener</h1>
         
-        <form hx-post="/shorten" hx-target="#result" hx-swap="innerHTML" class="space-y-5 mb-10">
+        <form hx-post="/shorten" hx-target="#result" hx-swap="innerHTML" class="space-y-4 sm:space-y-5 mb-8 sm:mb-10">
             <input type="url" name="url" placeholder="ENTER URL" required 
-                   class="w-full px-4 py-4 border-2 border-black text-base font-mono focus:outline-none focus:bg-gray-100">
+                   class="w-full px-3 py-3 sm:px-4 sm:py-4 border-2 border-black text-sm sm:text-base font-mono focus:outline-none focus:bg-gray-100">
             <button type="submit" 
-                    class="w-full px-4 py-4 border-2 border-black bg-black text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors">
+                    class="w-full px-3 py-3 sm:px-4 sm:py-4 border-2 border-black bg-black text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors text-sm sm:text-base">
                 SHORTEN
             </button>
         </form>
         
         <div id="result"></div>
         
-        <div class="mt-16 pt-5 border-t-2 border-black">
-            <a href="/stats" class="underline hover:bg-black hover:text-white">VIEW STATISTICS →</a>
+        <div class="mt-8 sm:mt-12 md:mt-16 pt-4 sm:pt-5 border-t-2 border-black">
+            <a href="/stats" class="underline hover:bg-black hover:text-white text-sm sm:text-base">VIEW STATISTICS →</a>
         </div>
     </div>
 </body>

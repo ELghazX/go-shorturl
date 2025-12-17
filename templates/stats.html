@@ -19,41 +19,43 @@
         }
     </script>
 </head>
-<body class="bg-white font-mono p-10">
-    <div class="max-w-6xl mx-auto border-2 border-black p-16">
-        <h1 class="text-6xl font-bold uppercase tracking-tight mb-16">Statistics</h1>
+<body class="bg-white font-mono p-4 sm:p-6 md:p-10">
+    <div class="max-w-6xl mx-auto border-2 border-black p-6 sm:p-10 md:p-16">
+        <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tight mb-8 sm:mb-12 md:mb-16">Statistics</h1>
         
         <div hx-get="/api/stats" hx-trigger="load, every 3s" hx-swap="innerHTML">
             {{if .}}
-            <table class="w-full border-collapse mb-10">
-                <thead>
-                    <tr class="bg-black text-white">
-                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Code</th>
-                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">URL</th>
-                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Clicks</th>
-                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Created</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .}}
-                    <tr class="border-b border-black hover:bg-gray-100">
-                        <td class="px-4 py-4 font-bold">
-                            <a href="/{{.ShortCode}}" target="_blank" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
-                        </td>
-                        <td class="px-4 py-4 max-w-md truncate">{{.LongURL}}</td>
-                        <td class="px-4 py-4 font-bold text-xl">{{.Clicks}}</td>
-                        <td class="px-4 py-4">{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
+            <div class="overflow-x-auto mb-8 sm:mb-10">
+                <table class="w-full border-collapse min-w-full">
+                    <thead>
+                        <tr class="bg-black text-white">
+                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Code</th>
+                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">URL</th>
+                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Clicks</th>
+                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .}}
+                        <tr class="border-b border-black hover:bg-gray-100">
+                            <td class="px-2 sm:px-4 py-3 sm:py-4 font-bold text-xs sm:text-sm">
+                                <a href="/{{.ShortCode}}" target="_blank" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
+                            </td>
+                            <td class="px-2 sm:px-4 py-3 sm:py-4 max-w-32 sm:max-w-md truncate text-xs sm:text-sm">{{.LongURL}}</td>
+                            <td class="px-2 sm:px-4 py-3 sm:py-4 font-bold text-sm sm:text-xl">{{.Clicks}}</td>
+                            <td class="px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm">{{.CreatedAt.Format "01-02 15:04"}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
             {{else}}
-            <div class="py-16 text-center text-xl uppercase">No Data</div>
+            <div class="py-12 sm:py-16 text-center text-lg sm:text-xl uppercase">No Data</div>
             {{end}}
         </div>
         
-        <div class="pt-5 border-t-2 border-black">
-            <a href="/" class="underline hover:bg-black hover:text-white">← BACK</a>
+        <div class="pt-4 sm:pt-5 border-t-2 border-black">
+            <a href="/" class="underline hover:bg-black hover:text-white text-sm sm:text-base">← BACK</a>
         </div>
     </div>
 </body>
