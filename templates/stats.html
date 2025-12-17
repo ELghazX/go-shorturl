@@ -4,58 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics</title>
-    <link rel="icon" type="image/svg+xml" href="static/logo.svg">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        mono: ['Courier New', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-white font-mono p-4 sm:p-6 md:p-10">
-    <div class="max-w-6xl mx-auto border-2 border-black p-6 sm:p-10 md:p-16">
-        <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tight mb-8 sm:mb-12 md:mb-16">Statistics</h1>
+<body class="bg-white font-mono p-4">
+    <div class="border-2 border-black p-4">
+        <h1 class="text-xl font-bold mb-4 uppercase">Statistics</h1>
         
-        <div hx-get="/api/stats" hx-trigger="load, every 3s" hx-swap="innerHTML">
+        <div hx-get="/api/stats" hx-trigger="load, every 3s" hx-swap="innerHTML" class="overflow-x-auto mb-4">
             {{if .}}
-            <div class="overflow-x-auto mb-8 sm:mb-10">
-                <table class="w-full border-collapse min-w-full">
-                    <thead>
-                        <tr class="bg-black text-white">
-                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Code</th>
-                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">URL</th>
-                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Clicks</th>
-                            <th class="px-2 sm:px-4 py-3 sm:py-4 text-left font-bold uppercase tracking-wider text-xs sm:text-sm">Created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{range .}}
-                        <tr class="border-b border-black hover:bg-gray-100">
-                            <td class="px-2 sm:px-4 py-3 sm:py-4 font-bold text-xs sm:text-sm">
-                                <a href="/{{.ShortCode}}" target="_blank" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
-                            </td>
-                            <td class="px-2 sm:px-4 py-3 sm:py-4 max-w-32 sm:max-w-md truncate text-xs sm:text-sm">{{.LongURL}}</td>
-                            <td class="px-2 sm:px-4 py-3 sm:py-4 font-bold text-sm sm:text-xl">{{.Clicks}}</td>
-                            <td class="px-2 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm">{{.CreatedAt.Format "01-02 15:04"}}</td>
-                        </tr>
-                        {{end}}
-                    </tbody>
-                </table>
-            </div>
+            <table class="min-w-full text-sm border-collapse">
+                <thead>
+                    <tr class="bg-black text-white">
+                        <th class="px-3 py-2 text-left font-bold uppercase">Code</th>
+                        <th class="px-3 py-2 text-left font-bold uppercase">URL</th>
+                        <th class="px-3 py-2 text-left font-bold uppercase">Clicks</th>
+                        <th class="px-3 py-2 text-left font-bold uppercase">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .}}
+                    <tr class="border-b border-black hover:bg-gray-100">
+                        <td class="px-3 py-2 font-bold">
+                            <a href="/{{.ShortCode}}" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
+                        </td>
+                        <td class="px-3 py-2">{{.LongURL}}</td>
+                        <td class="px-3 py-2 font-bold">{{.Clicks}}</td>
+                        <td class="px-3 py-2">{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
             {{else}}
-            <div class="py-12 sm:py-16 text-center text-lg sm:text-xl uppercase">No Data</div>
+            <div class="text-center py-8 uppercase">No Data</div>
             {{end}}
         </div>
         
-        <div class="pt-4 sm:pt-5 border-t-2 border-black">
-            <a href="/" class="underline hover:bg-black hover:text-white text-sm sm:text-base">← BACK</a>
+        <div class="pt-4 border-t-2 border-black">
+            <a href="/" class="underline hover:bg-black hover:text-white">← Back</a>
         </div>
     </div>
 </body>
