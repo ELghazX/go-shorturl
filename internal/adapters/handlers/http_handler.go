@@ -53,8 +53,13 @@ func (h *HTTPHandler) HandleShorten(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, `
-		<div class="short-url">%s</div>
-		<button onclick="navigator.clipboard.writeText('%s')" style="width:100%%">COPY URL</button>
+		<div class="border-2 border-black p-5 bg-gray-100">
+			<div class="text-xl mb-4 break-all">%s</div>
+			<button onclick="navigator.clipboard.writeText('%s')" 
+					class="w-full px-4 py-4 border-2 border-black bg-black text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors">
+				COPY URL
+			</button>
+		</div>
 	`, shortURL, shortURL)
 }
 
@@ -92,14 +97,14 @@ func (h *HTTPHandler) HandleAPIStats(w http.ResponseWriter, r *http.Request) {
 
 	if len(urls) == 0 {
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, `<div class="empty">No Data</div>`)
+		fmt.Fprint(w, `<div class="py-16 text-center text-xl uppercase">No Data</div>`)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprint(w, `<table><thead><tr><th>Code</th><th>URL</th><th>Clicks</th><th>Created</th></tr></thead><tbody>`)
+	fmt.Fprint(w, `<table class="w-full border-collapse mb-10"><thead><tr class="bg-black text-white"><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Code</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">URL</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Clicks</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Created</th></tr></thead><tbody>`)
 	for _, url := range urls {
-		fmt.Fprintf(w, `<tr><td class="code"><a href="/%s" target="_blank">%s</a></td><td class="url">%s</td><td class="clicks">%d</td><td>%s</td></tr>`,
+		fmt.Fprintf(w, `<tr class="border-b border-black hover:bg-gray-100"><td class="px-4 py-4 font-bold"><a href="/%s" target="_blank" class="underline hover:bg-black hover:text-white">%s</a></td><td class="px-4 py-4 max-w-md truncate">%s</td><td class="px-4 py-4 font-bold text-xl">%d</td><td class="px-4 py-4">%s</td></tr>`,
 			url.ShortCode, url.ShortCode, url.LongURL, url.Clicks, url.CreatedAt.Format("2006-01-02 15:04"))
 	}
 	fmt.Fprint(w, `</tbody></table>`)

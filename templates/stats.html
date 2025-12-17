@@ -5,114 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Courier New', monospace;
-            background: #fff;
-            color: #000;
-            line-height: 1.5;
-            padding: 40px 20px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['Courier New', 'monospace']
+                    }
+                }
+            }
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            border: 2px solid #000;
-            padding: 60px 40px;
-        }
-        h1 {
-            font-size: 48px;
-            font-weight: 700;
-            letter-spacing: -2px;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
-        th, td {
-            padding: 16px;
-            text-align: left;
-            border-bottom: 1px solid #000;
-        }
-        th {
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: #000;
-            color: #fff;
-        }
-        tr:hover {
-            background: #f0f0f0;
-        }
-        .code {
-            font-weight: 700;
-        }
-        .url {
-            max-width: 400px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .clicks {
-            font-weight: 700;
-            font-size: 20px;
-        }
-        a {
-            color: #000;
-            text-decoration: underline;
-        }
-        a:hover {
-            background: #000;
-            color: #fff;
-        }
-        .nav {
-            padding-top: 20px;
-            border-top: 2px solid #000;
-        }
-        .empty {
-            padding: 60px 20px;
-            text-align: center;
-            font-size: 20px;
-            text-transform: uppercase;
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="container">
-        <h1>Statistics</h1>
+<body class="bg-white font-mono p-10">
+    <div class="max-w-6xl mx-auto border-2 border-black p-16">
+        <h1 class="text-6xl font-bold uppercase tracking-tight mb-16">Statistics</h1>
         
         <div hx-get="/api/stats" hx-trigger="load, every 3s" hx-swap="innerHTML">
             {{if .}}
-            <table>
+            <table class="w-full border-collapse mb-10">
                 <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>URL</th>
-                        <th>Clicks</th>
-                        <th>Created</th>
+                    <tr class="bg-black text-white">
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Code</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">URL</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Clicks</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Created</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{range .}}
-                    <tr>
-                        <td class="code"><a href="/{{.ShortCode}}" target="_blank">{{.ShortCode}}</a></td>
-                        <td class="url">{{.LongURL}}</td>
-                        <td class="clicks">{{.Clicks}}</td>
-                        <td>{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
+                    <tr class="border-b border-black hover:bg-gray-100">
+                        <td class="px-4 py-4 font-bold">
+                            <a href="/{{.ShortCode}}" target="_blank" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
+                        </td>
+                        <td class="px-4 py-4 max-w-md truncate">{{.LongURL}}</td>
+                        <td class="px-4 py-4 font-bold text-xl">{{.Clicks}}</td>
+                        <td class="px-4 py-4">{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
                     </tr>
                     {{end}}
                 </tbody>
             </table>
             {{else}}
-            <div class="empty">No Data</div>
+            <div class="py-16 text-center text-xl uppercase">No Data</div>
             {{end}}
         </div>
         
-        <div class="nav">
-            <a href="/">← BACK</a>
+        <div class="pt-5 border-t-2 border-black">
+            <a href="/" class="underline hover:bg-black hover:text-white">← BACK</a>
         </div>
     </div>
 </body>
