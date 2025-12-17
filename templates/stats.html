@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white font-mono p-10">
+    <div class="max-w-6xl mx-auto border-2 border-black p-16">
+        <h1 class="text-6xl font-bold uppercase tracking-tight mb-16">Statistics</h1>
+        
+        <div hx-get="/api/stats" hx-trigger="load, every 3s" hx-swap="innerHTML">
+            {{if .}}
+            <table class="w-full border-collapse mb-10">
+                <thead>
+                    <tr class="bg-black text-white">
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Code</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">URL</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Clicks</th>
+                        <th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .}}
+                    <tr class="border-b border-black hover:bg-gray-100">
+                        <td class="px-4 py-4 font-bold">
+                            <a href="/{{.ShortCode}}" target="_blank" class="underline hover:bg-black hover:text-white">{{.ShortCode}}</a>
+                        </td>
+                        <td class="px-4 py-4 max-w-md truncate">{{.LongURL}}</td>
+                        <td class="px-4 py-4 font-bold text-xl">{{.Clicks}}</td>
+                        <td class="px-4 py-4">{{.CreatedAt.Format "2006-01-02 15:04"}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="py-16 text-center text-xl uppercase">No Data</div>
+            {{end}}
+        </div>
+        
+        <div class="pt-5 border-t-2 border-black">
+            <a href="/" class="underline hover:bg-black hover:text-white">← BACK</a>
+        </div>
+    </div>
+</body>
+</html>

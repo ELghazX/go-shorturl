@@ -54,7 +54,7 @@ func (s *URLService) GetStats(ctx context.Context) ([]domain.URL, error) {
 func (s *URLService) GetOriginalURL(ctx context.Context, shortCode string) (string, error) {
 	// cache
 	if longURL, err := s.cache.Get(ctx, shortCode); err == nil {
-		go s.repo.IncrementClicks(ctx, shortCode)
+		go s.repo.IncrementClicks(context.Background(), shortCode)
 		return longURL, nil
 	}
 
@@ -65,6 +65,6 @@ func (s *URLService) GetOriginalURL(ctx context.Context, shortCode string) (stri
 	}
 
 	s.cache.Set(ctx, shortCode, url.LongURL)
-	go s.repo.IncrementClicks(ctx, shortCode)
+	go s.repo.IncrementClicks(context.Background(), shortCode)
 	return url.LongURL, nil
 }

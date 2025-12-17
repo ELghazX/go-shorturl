@@ -53,13 +53,14 @@ func (h *HTTPHandler) HandleShorten(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintf(w, `
-		<div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-		<p class="text-lg mb-4">Short URL: <a href="%s" target="_blank" class="text-blue-500 hover:text-blue-700 font-mono">%s</a></p>
-		<button onclick="navigator.clipboard.writeText('%s')" 
-		        class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
-		    Copy URL
-		</button>
-	</div>`, shortURL, shortURL, shortURL)
+		<div class="border-2 border-black p-5 bg-gray-100">
+			<div class="text-xl mb-4 break-all">%s</div>
+			<button onclick="navigator.clipboard.writeText('%s')" 
+					class="w-full px-4 py-4 border-2 border-black bg-black text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors">
+				COPY URL
+			</button>
+		</div>
+	`, shortURL, shortURL)
 }
 
 func (h *HTTPHandler) HandleRedirect(w http.ResponseWriter, r *http.Request) {
@@ -85,6 +86,28 @@ func (h *HTTPHandler) HandleStats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.tmpl.ExecuteTemplate(w, "stats.html", urls)
+}
+
+func (h *HTTPHandler) HandleAPIStats(w http.ResponseWriter, r *http.Request) {
+	urls, err := h.urlService.GetStats(r.Context())
+	if err != nil {
+		http.Error(w, "Failed to get stats", http.StatusInternalServerError)
+		return
+	}
+
+	if len(urls) == 0 {
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, `<div class="py-16 text-center text-xl uppercase">No Data</div>`)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, `<table class="w-full border-collapse mb-10"><thead><tr class="bg-black text-white"><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Code</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">URL</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Clicks</th><th class="px-4 py-4 text-left font-bold uppercase tracking-wider">Created</th></tr></thead><tbody>`)
+	for _, url := range urls {
+		fmt.Fprintf(w, `<tr class="border-b border-black hover:bg-gray-100"><td class="px-4 py-4 font-bold"><a href="/%s" target="_blank" class="underline hover:bg-black hover:text-white">%s</a></td><td class="px-4 py-4 max-w-md truncate">%s</td><td class="px-4 py-4 font-bold text-xl">%d</td><td class="px-4 py-4">%s</td></tr>`,
+			url.ShortCode, url.ShortCode, url.LongURL, url.Clicks, url.CreatedAt.Format("2006-01-02 15:04"))
+	}
+	fmt.Fprint(w, `</tbody></table>`)
 }
 
 func getBaseURL(r *http.Request) string {

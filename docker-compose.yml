@@ -1,6 +1,8 @@
 services:
   postgres:
     image: postgres:18-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -10,20 +12,8 @@ services:
 
   redis:
     image: redis:7.4-alpine
-
-  app:
-    build: .
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      DB_HOST: ${DB_HOST:-postgres}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:
