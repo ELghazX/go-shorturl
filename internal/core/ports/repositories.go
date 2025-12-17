@@ -6,7 +6,7 @@ import (
 	"github.com/elghazx/go-shorturl/internal/core/domain"
 )
 
-type URLRepositories interface {
+type URLRepository interface {
 	Save(ctx context.Context, url *domain.URL) error
 	GetByShortCode(ctx context.Context, shortCode string) (*domain.URL, error)
 	IncrementClicks(ctx context.Context, shortCode string) error
